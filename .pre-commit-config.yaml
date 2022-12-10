@@ -1,5 +1,0 @@
-repos:
--   repo: https://gitlab.com/advanced-python6/final-project
-    rev: stable
-    hooks:
-    -   id: check-added-large-files
