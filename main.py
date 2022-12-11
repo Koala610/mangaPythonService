@@ -6,7 +6,7 @@ from concurrent.futures import ProcessPoolExecutor
 def start_second():
     async def test():
         while True:
-            time.sleep(3)
+            await asyncio.sleep(3)
             await telegram_bot.send_message(335271283, "11")
     asyncio.run(test())
 
