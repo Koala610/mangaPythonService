@@ -1,4 +1,5 @@
-from ...bot import telegram_bot, dp, types
+from config import types
+from ..bot_init import telegram_bot, dp
 
 @dp.message_handler(commands = ['start'])
 async def handle_start(message: types.Message):

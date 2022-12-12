@@ -1,21 +1,9 @@
-import asyncio
-import time
-from src import start_bot, telegram_bot 
-from concurrent.futures import ProcessPoolExecutor
+from config import asyncio, uvicorn
+from src import dp, app
 
-def start_second():
-    async def test():
-        while True:
-            await asyncio.sleep(3)
-            await telegram_bot.send_message(335271283, "11")
-    asyncio.run(test())
+@app.on_event("startup")
+def start_bot():
+    dp.start_polling()
 
-async def main():
-    loop = asyncio.get_running_loop()
-    pool = ProcessPoolExecutor()
-    tasks = []
-    tasks.append(loop.run_in_executor(pool, start_bot))
-    tasks.append(loop.run_in_executor(pool, start_second))
-    await asyncio.gather(*tasks)
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.create_task(uvicorn.run(app=app, host="localhost", port=8080))
