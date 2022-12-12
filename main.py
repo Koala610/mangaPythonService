@@ -1,5 +1,5 @@
 from config import asyncio, uvicorn
-from src import dp, app
+from src.service import app, dp
 
 @app.on_event("startup")
 async def start_bot():

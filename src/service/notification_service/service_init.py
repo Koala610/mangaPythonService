@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from ...bot import telegram_bot
+from config import FastAPI
+from ..bot.bot_init import telegram_bot
 
 app = FastAPI()
 

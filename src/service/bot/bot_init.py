@@ -1,4 +1,4 @@
-from config import *
+from config import MemoryStorage, Bot, API_TOKEN, Dispatcher
 
 
 storage = MemoryStorage()

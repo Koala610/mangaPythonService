@@ -5,3 +5,4 @@ from settings import *
 from .logger import *
 from aiogram import Bot, Dispatcher , types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from fastapi import FastAPI

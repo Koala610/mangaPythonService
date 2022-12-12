@@ -1,1 +1,0 @@
-from .service_init import app 
