@@ -1,7 +1,6 @@
-from config import MemoryStorage, Bot, API_TOKEN, Dispatcher
+import aiogram
+import config 
 
-
-storage = MemoryStorage()
-telegram_bot = Bot(token=API_TOKEN)
-dp = Dispatcher(telegram_bot, storage=storage)
+telegram_bot = aiogram.Bot(token=config.API_TOKEN)
+dp = aiogram.Dispatcher(telegram_bot)
 

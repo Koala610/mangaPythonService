@@ -1,4 +1,6 @@
-from config import asyncio, uvicorn, SERVICE_PORT, SERVICE_HOST
+import asyncio
+import uvicorn
+from config import SERVICE_PORT, SERVICE_HOST
 from src.service import app
 
 

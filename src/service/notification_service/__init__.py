@@ -1,5 +1,5 @@
-import config
+import fastapi
 from .routers import base
 
-app = config.FastAPI()
+app = fastapi.FastAPI()
 app.include_router(router=base.router)
