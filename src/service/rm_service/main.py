@@ -1,6 +1,6 @@
 import asyncio
 
-from ...entity.parser.parser_protocol import MangaParser
+from ...entity.parser_protocol import MangaParser
 from ..client import HTTPClient
 
 
