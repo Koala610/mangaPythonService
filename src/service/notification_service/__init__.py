@@ -1,5 +1,2 @@
-import fastapi
-from .routers import base
-
-app = fastapi.FastAPI()
-app.include_router(router=base.router)
+from src.service._notification_service.service import app
+import src.service._notification_service.tasks

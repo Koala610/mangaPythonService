@@ -1,2 +1,2 @@
-from .bot.controllers import *
-from .notification_service import app
+import src.service.bot.controllers
+from src.service.notification_service import app

@@ -1,1 +1,1 @@
-{\rtf1}
+from .mysql.user_repository import UserRepository

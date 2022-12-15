@@ -1,5 +1,5 @@
 import aiogram
-from ...bot import telegram_bot, dp
+from src.service.bot import telegram_bot, dp
 
 @dp.message_handler(commands = ['start'])
 async def handle_start(message: aiogram.types.Message):

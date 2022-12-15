@@ -5,9 +5,8 @@ from ...entity.database_object import DatabaseObject
 
 
 class CRUDRepository:
-    def __init__(self, Object: Type[DatabaseObject], db_credentials: dict):
-        self.engine = create_engine(
-            f"mysql+pymysql://{db_credentials['user']}:{db_credentials['password']}@{db_credentials['host']}/{db_credentials['database']}")
+    def __init__(self, Object: Type[DatabaseObject], dsn: str):
+        self.engine = create_engine(dsn)
         self.Session = sessionmaker(bind=self.engine)
         self.Object = Object
 
