@@ -1,43 +1,56 @@
-import aiohttp
+from typing import List, Union
+
 import asyncio
 import random
-import aiohttp
 
-from typing import Any, List, Coroutine, Optional
+import aiohttp
 
 
 class HTTPClient:
-    def __init__(self, proxies: Optional[List[str]] = None) -> None:
-        if proxies is None:
-            proxies = []
-        self.proxies: List[str] = proxies
-        self.cookies: dict = {}
-        self.current_proxy: str = ""
+    CHANGE_PROXY_TIME = 30
 
-    async def get(self, url: str) -> Coroutine[Any, Any, str]:
-        async with aiohttp.ClientSession(cookies=self.cookies) as session:
-            async with session.get(url, proxy=self.current_proxy) as response:
-                return await response.text()
+    def __init__(self, proxies: List[str] = None):
+        self.proxies = proxies or []
+        self.current_proxy = None
+        self.cookies = {}
+        self.session = aiohttp.ClientSession()
 
-    async def post(self, url: str, data: dict) -> Coroutine[Any, Any, str]:
-        async with aiohttp.ClientSession(cookies=self.cookies) as session:
-            async with session.post(url, data=data, proxy=self.current_proxy) as response:
-                return await response.text()
+    async def get(self, url: str, headers: dict = None, params: dict = None, return_text: bool = False) -> Union[aiohttp.ClientResponse, None]:
+        async with self.session as client:
+            async with client.get(
+                url, headers=headers, params=params, proxy=self.current_proxy
+            ) as resp:
+                if return_text:
+                    text = await resp.text()
+                    return text
+                return resp
 
-    def add_proxy(self, proxy: str) -> None:
-        self.proxies.append(proxy)
+    async def post(self, url: str, headers: dict = None, data: dict = None, return_text: bool = False) -> Union[aiohttp.ClientResponse, None]:
+        async with self.session as client:
+            async with client.post(
+                url, headers=headers, data=data, proxy=self.current_proxy
+            ) as resp:
+                if return_text:
+                    text = await resp.text()
+                    return text
+                return resp
 
-    def switch_proxy(self) -> None:
-        if len(self.proxies) == 0:
+    async def change_proxy(self, seconds: int = CHANGE_PROXY_TIME):
+        if not self.proxies:
             return
-        self.current_proxy = (random.randint(
-            0, len(self.proxies))) % len(self.proxies)
+
+        if self.current_proxy:
+            await asyncio.sleep(seconds)
+        self.current_proxy = random.choice(self.proxies)
+
+
 
 
 async def main():
     client = HTTPClient()
-    response = await client.get("https://google.com")
+    response = await client.get("https://google.com", return_text=True)
     print(response)
+
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     loop.create_task(main())
