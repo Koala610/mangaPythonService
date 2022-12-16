@@ -1,9 +1,11 @@
-from config import asyncio, uvicorn
-from src.service import app, dp
+import asyncio
+import uvicorn
+import src.logger as logger
 
-@app.on_event("startup")
-async def start_bot():
-    asyncio.create_task(dp.start_polling())
+from config import SERVICE_PORT, SERVICE_HOST
+from src.service import app
+
 
 if __name__ == "__main__":
-    asyncio.create_task(uvicorn.run(app=app, host="localhost", port=8080))
+    logger.logger.info("Notification service started...")
+    asyncio.create_task(uvicorn.run(app=app, host=SERVICE_HOST, port=SERVICE_PORT))

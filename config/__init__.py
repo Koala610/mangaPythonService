@@ -1,8 +1,16 @@
-import asyncio
-import uvicorn
+import os
 
-from settings import *
-from .logger import *
-from aiogram import Bot, Dispatcher , types
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from fastapi import FastAPI
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+API_TOKEN = os.getenv("API_TOKEN")
+SERVICE_PORT = int(os.getenv("SERVICE_PORT"))
+SERVICE_HOST = os.getenv("SERVICE_HOST")
+USERNAME = os.getenv("MYSQL_USERNAME")
+PASSWORD = os.getenv("MYSQL_PASSWORD")
+HOST = os.getenv("MYSQL_HOST")
+DATABASE = os.getenv("MYSQL_DATABASE")
+PORT = os.getenv("MYSQL_PORT")
+
+DSN = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}?charset=utf8mb4"
+print(DSN)

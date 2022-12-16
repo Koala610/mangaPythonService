@@ -1,0 +1,2 @@
+class NullSessionException(Exception):
+    pass
