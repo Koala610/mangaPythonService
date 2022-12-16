@@ -1,7 +1,9 @@
+import src.logger as logger
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from typing import Type
-from ...entity.database_object import DatabaseObject
+from ...entity.protocol.database_object import DatabaseObject
 
 
 class CRUDRepository:

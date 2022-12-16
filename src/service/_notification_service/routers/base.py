@@ -1,5 +1,5 @@
 import fastapi
-from ...bot import telegram_bot
+from src.service.bot import telegram_bot
 
 router = fastapi.APIRouter()
 @router.get("/")

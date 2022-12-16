@@ -1,6 +1,2 @@
-import aiogram
-import config 
-
-telegram_bot = aiogram.Bot(token=config.API_TOKEN)
-dp = aiogram.Dispatcher(telegram_bot)
-
+import src.service._bot.controllers as controllers
+from src.service._bot.bot import telegram_bot, dp

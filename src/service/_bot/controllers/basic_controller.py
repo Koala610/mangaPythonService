@@ -1,7 +1,8 @@
 import aiogram
-from src.service.bot import telegram_bot, dp
+import src.logger as logger
+from src.service._bot.bot import telegram_bot, dp
 
 @dp.message_handler(commands = ['start'])
 async def handle_start(message: aiogram.types.Message):
-    print(message.from_user.id)
+    logger.logger.info("Message recieved")
     await telegram_bot.send_message(message.from_user.id, "Hi!")
