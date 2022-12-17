@@ -5,7 +5,7 @@ import src.logger as logger
 from fake_useragent import UserAgent
 from ...entity.protocol.parser_protocol import MangaParser
 from ..http_client.client import HTTPClient
-
+from typing import Tuple
 
 class MangaService:
     BASE_URL = "https://readmanga.live"
@@ -17,24 +17,28 @@ class MangaService:
         self.client: HTTPClient = client
         logger.logger.info("Manga service initalized...")
 
-    async def auth(self, user_id: int, user_data: dict) -> dict:
-        is_session_exists = self.client.check_if_user_information_exists(
+    async def verify_user_session(self, user_id: int) -> None:
+        is_session_exists = self.client.check_if_user_session(
             user_id=user_id)
-
         if not is_session_exists:
             await self.create_user_information(user_id=user_id)
 
+    async def get_basic_cookies(self, user_id: int) -> Tuple[dict, dict]:
         user_information = self.client.get_user_information(user_id)
         response = await self.client.get(
             self.BASE_URL+"/internal/auth",
-            user_id=user_id, headers=user_information["headers"]
+            user_id=user_id, headers=user_information.get("headers")
         )
-        response_text = response.get("text")
+        return user_information.get("headers"), response
 
-        parse_result = self.parser.parse_auth_page(response_text)
+    async def auth(self, user_id: int, user_data: dict) -> dict:
+        await self.verify_user_session(user_id)
+        headers, response = await self.get_basic_cookies(user_id)
+
+        parse_result = self.parser.parse_auth_page(response.get("text"))
         url = self.AUTH_BASE_URL+parse_result.get("url")
-        headers = user_information.get("headers")
         headers["Referer"] = url
+        headers["Content-Type"] = "application/x-www-form-urlencoded"
         self.set_default_headers(headers)
 
         target_uri = parse_result.get("target_uri")
@@ -62,7 +66,6 @@ class MangaService:
 
     def set_default_headers(self, headers: dict):
         headers["DNT"] = "1"
-        headers["Content-Type"] = "application/x-www-form-urlencoded"
 
 
 async def main():

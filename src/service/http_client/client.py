@@ -63,6 +63,12 @@ class HTTPClient:
     def check_if_user_information_exists(self, user_id: int):
         return True if self.user_informations.get(user_id) else False
 
+    def check_if_user_session(self, user_id: int):
+        is_user_info_exists = self.check_if_user_information_exists(user_id)
+        if is_user_info_exists:
+            return True if self.user_informations.get(user_id).get("cookie_jar") else False
+        return False
+
     def save_user_information(self, user_id: int, user_information: dict):
         self.user_informations[user_id] = user_information
 
