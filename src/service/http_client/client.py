@@ -54,7 +54,7 @@ class HTTPClient:
             await asyncio.sleep(seconds)
         self.current_proxy = random.choice(self.proxies)
 
-    def get_user_information(self, user_id: int) -> aiohttp.ClientSession:
+    def get_user_information(self, user_id: int) -> dict:
         user_information = self.user_informations.get(user_id)
         if user_information is None:
             logger.logger.warning(f"Cookie for user_id: {user_id} not found")
