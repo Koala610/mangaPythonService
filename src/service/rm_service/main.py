@@ -1,6 +1,5 @@
 import asyncio
 
-import aiohttp
 import src.logger as logger
 
 from fake_useragent import UserAgent
@@ -8,11 +7,12 @@ from ...entity.protocol.parser_protocol import MangaParser
 from ..http_client.client import HTTPClient
 
 
-class RMService:
+class MangaService:
     BASE_URL = "https://readmanga.live"
     def __init__(self, parser: MangaParser, client: HTTPClient):
         self.parser: MangaParser = parser
         self.client: HTTPClient = client
+        logger.logger.info("Manga service initalized...")
 
     async def auth(self, user_id: int) -> dict:
         is_session_exists = self.client.check_if_user_information_exists(user_id=user_id)
@@ -20,6 +20,8 @@ class RMService:
             await self.create_user_information(user_id=user_id)
         user_information = self.client.get_user_information(user_id)
         response = await self.client.get(self.BASE_URL+"/internal/auth", user_id=user_id, headers=user_information["headers"]) 
+        user_data = {}
+        # parse_result = self.parser.parse_auth_page(response.get("text"))
         return response
 
     async def create_user_information(self, user_id):

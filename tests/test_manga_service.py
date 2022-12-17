@@ -1,14 +1,14 @@
 import unittest
 import asyncio
-from src.service.rm_service.main import RMService
+from src.service.rm_service.main import MangaService
 from src.entity.readmanga_parser import ReadmangaParser
 from src.service.http_client.client import HTTPClient
 
-class TestRMService(unittest.TestCase):
+class TestMangaService(unittest.TestCase):
     def setUp(self) -> None:
         parser = ReadmangaParser()
         client = HTTPClient()
-        self.rm_service = RMService(parser=parser, client=client)
+        self.rm_service = MangaService(parser=parser, client=client)
 
     def test_auth(self):
         loop = asyncio.get_event_loop()
