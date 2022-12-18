@@ -1,14 +1,16 @@
 import asyncio
 import random
-import src.service.http_client.exceptions as exceptions
 import aiohttp
 import src.logger as logger
 
-from typing import List, Union, Dict, Optional
-from functools import singledispatchmethod
+from typing import List, Union, Dict, Optional, Tuple
+from fake_useragent import UserAgent
 
-class HTTPClient:
+class RMHTTPClient:
     CHANGE_PROXY_TIME = 300
+    BASE_URL = "https://readmanga.live"
+    AUTH_PATH = "/internal/auth"
+    AUTH_BODY_TEMPLATE = "targetUri={target_uri}&username={username}&password={password}&remember_me=true&_remember_me_yes=&remember_me_yes=on"
 
     def __init__(self, proxies: List[str] = None):
         self.proxies: List[str] = proxies or []
@@ -63,7 +65,7 @@ class HTTPClient:
     def check_if_user_information_exists(self, user_id: int):
         return True if self.user_informations.get(user_id) else False
 
-    def check_if_user_session(self, user_id: int):
+    def check_if_user_session_exists(self, user_id: int):
         is_user_info_exists = self.check_if_user_information_exists(user_id)
         if is_user_info_exists:
             return True if self.user_informations.get(user_id).get("cookie_jar") else False
@@ -71,6 +73,34 @@ class HTTPClient:
 
     def save_user_information(self, user_id: int, user_information: dict):
         self.user_informations[user_id] = user_information
+
+    def create_user_information(self, user_id):
+        user_agent = UserAgent()
+        headers = {"User-Agent": user_agent.firefox}
+        user_information = {"cookie_jar": None, "headers": headers}
+        self.save_user_information(
+            user_id=user_id, user_information=user_information)
+
+    def verify_user_session(self, user_id: int) -> None:
+        is_session_exists = self.check_if_user_session_exists(
+            user_id=user_id)
+        if not is_session_exists:
+            self.create_user_information(user_id=user_id)
+
+    async def get_auth_page_html(self, user_id: int, headers: dict) -> Tuple[dict, dict]:
+        response = await self.get(
+            self.BASE_URL+self.AUTH_PATH,
+            user_id=user_id, headers=headers
+        )
+        return response.get("text")
+
+    def get_auth_request_body(self, user_data: dict, parse_result: dict):
+        data = self.AUTH_BODY_TEMPLATE.format(
+            target_uri= parse_result.get("target_uri"),
+            username=user_data.get("username"),
+            password=user_data.get("password")
+        )
+        return data
 
 async def main():
     client = HTTPClient()

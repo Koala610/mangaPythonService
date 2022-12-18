@@ -2,13 +2,13 @@ import unittest
 import asyncio
 from src.service.rm_service.main import MangaService
 from src.entity.readmanga_parser import ReadmangaParser
-from src.service.http_client.client import HTTPClient
+from src.service.http_client.client import RMHTTPClient
 from config import TEST_USERNAME, TEST_PASSWORD
 
 class TestMangaService(unittest.TestCase):
     def setUp(self) -> None:
         parser = ReadmangaParser()
-        client = HTTPClient()
+        client = RMHTTPClient()
         self.rm_service = MangaService(parser=parser, client=client)
 
     def test_auth(self):
