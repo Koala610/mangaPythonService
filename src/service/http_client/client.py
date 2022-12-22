@@ -1,8 +1,8 @@
 import asyncio
-import random
 import aiohttp
 import json
 import src.logger as logger
+import random
 
 from typing import List, Union, Dict, Optional, Tuple
 from fake_useragent import UserAgent
@@ -30,12 +30,6 @@ class RMHTTPClient:
         self.current_proxy: Optional[str] = None
         self.user_informations: Dict[int, dict] = {}
 
-    def serialize_user_information(self):
-        pass
-
-    def deserialize_user_information(self):
-        pass
-
     async def auth(self, user_id: int, headers: dict, data: dict, params: dict) -> dict:
         self.set_auth_headers(headers)
         data = self.get_auth_request_body(
@@ -50,6 +44,8 @@ class RMHTTPClient:
         self, url: str, user_id: int,
         headers: dict = None, params: dict = None, use_gwt: bool = False
     ) -> Union[dict, None]:
+        user_agent = UserAgent()
+        headers["User-Agent"] = user_agent.firefox
         user_information = self.get_user_information(user_id)
         if use_gwt:
             gwt = self.get_gwt(user_id)
@@ -71,6 +67,8 @@ class RMHTTPClient:
         headers: dict = None, data: dict = None
     ) -> Union[dict, None]:
         user_information = self.get_user_information(user_id)
+        user_agent = UserAgent()
+        headers["User-Agent"] = user_agent.firefox
         response = {}
         async with aiohttp.ClientSession(cookie_jar=user_information.get("cookie_jar")) as client:
             async with client.post(
@@ -113,10 +111,9 @@ class RMHTTPClient:
     def save_user_information(self, user_id: int, user_information: dict) -> None:
         self.user_informations[user_id] = user_information
 
-    def create_user_information(self, user_id) -> None:
-        user_agent = UserAgent()
-        headers = {"User-Agent": user_agent.firefox}
-        user_information = {"cookie_jar": None, "headers": headers}
+    def create_user_information(self, user_id, cookie_jar = None) -> None:
+        cookie_jar = cookie_jar or None
+        user_information = {"cookie_jar": cookie_jar}
         self.save_user_information(
             user_id=user_id, user_information=user_information)
 
@@ -146,8 +143,7 @@ class RMHTTPClient:
         headers["Content-Type"] = self.AUTH_CONTENT_TYPE
 
     async def get_bookmarks_data(self, user_id: int) -> list:
-        user_information = self.get_user_information(user_id=user_id)
-        headers = user_information.get("headers")
+        headers = {}
         gwt = self.get_gwt(user_id)
         headers["Authorization"] = f"Bearer {gwt}"
         headers["Content-Type"] = "application/json"
@@ -167,9 +163,8 @@ class RMHTTPClient:
 
 
 async def main():
-    client = RMHTTPClient()
-    response = await client.get("https://google.com", return_text=True)
-    print(response)
+    cookieJar = aiohttp.CookieJar()
+    cookieJar.save()
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
