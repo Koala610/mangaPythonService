@@ -16,8 +16,7 @@ class MangaService:
         logger.info("Manga service initalized...")
 
     async def auth(self, user_id: int, user_data: dict) -> dict:
-        user_information = self.client.get_user_information(user_id)
-        headers = user_information.get("headers")
+        headers = {}
 
         auth_page_html = await self.client.get_auth_page_html(user_id, headers)
         params = self.parser.parse_auth_page(auth_page_html)
@@ -34,7 +33,6 @@ class MangaService:
     async def get_bookmarks(self, user_id: int) -> list:
         bookmarks = await self.client.get_bookmarks_data(user_id)
         bookmarks = [self.Manga.from_json(book) for book in bookmarks]
-        headers = self.client.get_user_information(user_id).get("headers")
         logger.debug(bookmarks)
         return bookmarks
 

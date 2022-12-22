@@ -1,1 +1,1 @@
-from .mysql.user_repository import UserRepository
+from .mysql import UserRepository, user_repository

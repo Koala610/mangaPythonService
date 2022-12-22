@@ -6,6 +6,10 @@ class RMChapter:
     chapter: int = 0
     url: str = ""
 
+    def __str__(self):
+        res = f"{self.volume} том, {self.chapter} глава"
+        return res
+
     def __hash__(self):
        res = 17
        res = 31 * res + self.volume
@@ -19,6 +23,12 @@ class RMManga:
     current_chapter: RMChapter
     url: str
     unread_chapters: int = 0
+
+    def __str__(self):
+        result = "Название: " + self.title + "\n"
+        result += "Текущая глава: " + str(self.current_chapter) + "\n"
+        result += "Кол-во непрочитанных глав: " + str(self.unread_chapters)
+        return result
 
     def __hash__(self):
         res = 17
