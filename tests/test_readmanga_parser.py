@@ -16,3 +16,11 @@ class TestRMParser(unittest.TestCase):
         url: str = result["url"]
         self.assertTrue("/login/" in targer_uri)
         self.assertTrue("/authenticate?" in url)
+
+    def test_parse_manga_page(self):
+        content = ""
+        with open("./tests/rm_manga_page.html", "r", encoding="utf8") as file:
+            content = file.read()
+        result = self.parser.parse_manga_page(content)
+        logger.debug(result)
+        self.assertIsNotNone(result)

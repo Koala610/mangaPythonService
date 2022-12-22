@@ -1,69 +1,42 @@
 import asyncio
-
 import src.logger as logger
 
-from fake_useragent import UserAgent
-from ...entity.protocol.parser_protocol import MangaParser
-from ..http_client.client import HTTPClient
+from src.entity.protocol.parser_protocol import MangaParser
+from src.entity.protocol.client_protocol import HTTPClient
+from src.entity.protocol.manga_protocol import Manga
 
 
 class MangaService:
     BASE_URL = "https://readmanga.live"
-    AUTH_BASE_URL = "https://grouple.co"
-    AUTH_BODY_TEMPLATE = "targetUri={target_uri}&username={username}&password={password}&remember_me=true&_remember_me_yes=&remember_me_yes=on"
 
-    def __init__(self, parser: MangaParser, client: HTTPClient):
+    def __init__(self, parser: MangaParser, client: HTTPClient, Manga: Manga):
         self.parser: MangaParser = parser
         self.client: HTTPClient = client
-        logger.logger.info("Manga service initalized...")
+        self.Manga = Manga
+        logger.info("Manga service initalized...")
 
     async def auth(self, user_id: int, user_data: dict) -> dict:
-        is_session_exists = self.client.check_if_user_information_exists(
-            user_id=user_id)
-
-        if not is_session_exists:
-            await self.create_user_information(user_id=user_id)
-
         user_information = self.client.get_user_information(user_id)
-        response = await self.client.get(
-            self.BASE_URL+"/internal/auth",
-            user_id=user_id, headers=user_information["headers"]
-        )
-        response_text = response.get("text")
-
-        parse_result = self.parser.parse_auth_page(response_text)
-        url = self.AUTH_BASE_URL+parse_result.get("url")
         headers = user_information.get("headers")
-        headers["Referer"] = url
-        self.set_default_headers(headers)
 
-        target_uri = parse_result.get("target_uri")
-        data = self.AUTH_BODY_TEMPLATE.format(
-            target_uri=target_uri,
-            username=user_data.get("username"),
-            password=user_data.get("password")
-        )
-        response = await self.client.post(
-            url, user_id=user_id, headers=headers, data=data
-        )
+        auth_page_html = await self.client.get_auth_page_html(user_id, headers)
+        params = self.parser.parse_auth_page(auth_page_html)
+
+        response = await self.client.auth(user_id, headers, user_data, params) 
         if "Вход произведен" in response.get("text"):
-            logger.logger.info(f"Auth completed for user: {user_data.get('username')}")
+            logger.info(
+                f"Auth completed for user: {user_data.get('username')}")
         else:
-            logger.logger.warning(f"Auth failed for user: {user_data.get('username')}")
+            logger.logger.warning(
+                f"Auth failed for user: {user_data.get('username')}")
         return response
 
-    async def create_user_information(self, user_id):
-        user_agent = UserAgent()
-        headers = {"User-Agent": user_agent.firefox}
-        user_information = {"cookie_jar": None, "headers": headers}
-        self.client.save_user_information(
-            user_id=user_id, user_information=user_information)
-        await self.client.get(self.BASE_URL, user_id, headers=headers)
-
-    def set_default_headers(self, headers: dict):
-        headers["DNT"] = "1"
-        headers["Content-Type"] = "application/x-www-form-urlencoded"
-
+    async def get_bookmarks(self, user_id: int) -> list:
+        bookmarks = await self.client.get_bookmarks_data(user_id)
+        bookmarks = [self.Manga.from_json(book) for book in bookmarks]
+        headers = self.client.get_user_information(user_id).get("headers")
+        logger.debug(bookmarks)
+        return bookmarks
 
 async def main():
     pass

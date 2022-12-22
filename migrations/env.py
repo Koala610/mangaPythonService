@@ -1,3 +1,8 @@
+import sys
+import os
+  
+current = os.path.dirname(os.path.realpath(__file__))
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -5,8 +10,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from config import DSN
-from src.entity.base import Base
+from src import config as conf
+from src import Base
 
 
 # this is the Alembic Config object, which provides
@@ -42,7 +47,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option(DSN)
+    url = config.get_main_option(conf.DSN)
     print(url)
     context.configure(
         url=url,
@@ -63,7 +68,7 @@ def run_migrations_online() -> None:
 
     """
     configuration = config.get_section(config.config_ini_section)
-    configuration['sqlalchemy.url'] = DSN 
+    configuration['sqlalchemy.url'] = conf.DSN 
     connectable = engine_from_config(
         configuration,
         prefix="sqlalchemy.",

@@ -1,4 +1,4 @@
 from typing import Protocol
 
-class DatabaseObject(Protocol):
+class DatabaseEntity(Protocol):
     id: int

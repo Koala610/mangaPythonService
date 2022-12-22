@@ -3,11 +3,11 @@ import src.logger as logger
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from typing import Type, Optional
-from ...entity.protocol.database_object import DatabaseObject
+from ...entity.protocol.entity_protocol import DatabaseEntity
 
 
 class CRUDRepository:
-    def __init__(self, Object: Type[DatabaseObject], dsn: str):
+    def __init__(self, Object: Type[DatabaseEntity], dsn: str):
         self.engine = create_engine(dsn)
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=False)
         self.Object = Object

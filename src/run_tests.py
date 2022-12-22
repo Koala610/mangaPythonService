@@ -1,4 +1,5 @@
 import unittest
+import config
 
 from tests import *
 
