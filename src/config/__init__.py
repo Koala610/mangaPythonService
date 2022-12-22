@@ -1,4 +1,11 @@
+import sys
 import os
+  
+current = os.path.dirname(os.path.realpath(__file__))
+parent_directory = os.path.dirname(current)
+parent_directory = os.path.dirname(parent_directory)
+  
+sys.path.append(parent_directory)
 
 from dotenv import load_dotenv, find_dotenv
 
