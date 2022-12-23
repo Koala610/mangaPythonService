@@ -1,18 +1,16 @@
 import src.service._bot.models.bookmarks as bookmark_actions
-import pickle
 
-from aiogram.dispatcher import FSMContext
 from aiogram import types
 
 from src.service._bot.bot import telegram_bot, dp
 from src import logger
 
-from ..views.menu_markups import main_menu
 from ..views.bookmarks import create_bookmark_response
 
+
 @dp.message_handler(
-    lambda message: message.text and 
-                    (message.text == '/bookmarks' or message.text == '🔖 Вывести закладки')
+    lambda message: message.text and
+    (message.text == '/bookmarks' or message.text == '🔖 Вывести закладки')
 )
 async def get_bookmarks(message: types.Message):
     user_id = message.from_user.id
@@ -23,3 +21,5 @@ async def get_bookmarks(message: types.Message):
     for bookmark in bookmarks:
         text, markup = create_bookmark_response(bookmark)
         await telegram_bot.send_message(user_id, text, reply_markup=markup)
+
+

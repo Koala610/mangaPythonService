@@ -25,8 +25,8 @@ class TestMangaService(unittest.TestCase):
     def test_obtaining_bookmarks(self):
         loop = asyncio.get_event_loop()
         user_data = {"username": TEST_USERNAME, "password": TEST_PASSWORD}
-        loop.run_until_complete(asyncio.gather(self.rm_service.auth(1, user_data)))
-        response = loop.run_until_complete(asyncio.gather(self.rm_service.get_bookmarks(1)))
+        loop.run_until_complete(asyncio.gather(self.rm_service.auth(335271283, user_data)))
+        response = loop.run_until_complete(asyncio.gather(self.rm_service.get_bookmarks(335271283)))
         self.assertTrue(response)
 
 def main():
