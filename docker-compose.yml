@@ -1,0 +1,30 @@
+version: '3.3'
+services:
+  mysqldb:
+    container_name: mysqldb
+    build: ./docker/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'test'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'admin'
+      MYSQL_ROOT_PASSWORD: 'Root1234'
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    ports:
+      - '3305:3306'
+  python:
+    container_name: pythonservice
+    build: ./
+    restart: always
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    ports:
+      - '8079:8080'
+    links:
+      - mysqldb
+    command: bash -c "alembic upgrade head && python ./src/main.py"
