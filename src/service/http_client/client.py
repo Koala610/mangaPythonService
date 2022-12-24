@@ -166,7 +166,7 @@ class RMHTTPClient:
         headers["DNT"] = "1"
         headers["Content-Type"] = self.AUTH_CONTENT_TYPE
 
-    async def get_bookmarks_data(self, user_id: int, limit: int = 50, offset: int = 0) -> list:
+    async def get_bookmarks_data(self, user_id: int, limit: int = 0, offset: int = 0) -> list:
         headers = {}
         gwt = self.get_gwt(user_id)
         if gwt is None:

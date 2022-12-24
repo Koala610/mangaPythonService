@@ -7,8 +7,9 @@ class RMChapter:
     url: str = ""
 
     def __str__(self):
-        res = f"{self.volume} том, {self.chapter} глава"
-        return res
+        if self.volume == -1:
+            return "Недоступно"
+        return f"{self.volume} том, {self.chapter} глава"
 
     def __hash__(self):
        res = 17
