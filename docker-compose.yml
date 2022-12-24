@@ -2,7 +2,7 @@ version: '3.3'
 services:
   mysqldb:
     container_name: mysqldb
-    build: ./docker/mysql
+    image: mysql:latest
     restart: always
     environment:
       MYSQL_DATABASE: 'test'

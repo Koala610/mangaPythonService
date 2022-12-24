@@ -30,11 +30,9 @@ async def get_bookmarks(user_id: int, dp, limit: int = 0, offset: int = 0, retur
     return bookmarks
 
 async def save_bookmarks_in_storage(user_id, bookmarks, dp):
-        bookmarks_dict = get_boomarks_dict(bookmarks)
         storage_data = {
             "timestamp": datetime.datetime.now(),
             "bookmarks": bookmarks,
-            "bookmarks_dict": bookmarks_dict
         }
         await dp.storage.set_data(user=user_id, data=storage_data)
 
