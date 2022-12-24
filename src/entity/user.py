@@ -8,6 +8,6 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, unique=True)
     name = Column(String(255))
     bookmarks_hash = Column(BigInteger)
-    bookmarks_per_page = Column(Integer)
+    bookmarks_per_page = Column(Integer, default=10)
     technical_info = Column(LargeBinary)
     is_subscribed = Column(Boolean, default=False)

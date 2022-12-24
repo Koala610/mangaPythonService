@@ -1,6 +1,6 @@
 import src.service.bot as bot
 import asyncio
-import src.service.bot_controller as bot_controller
+import src.service.bot_http_cover as bot_controller
 from src import logger
 
 @bot_controller.app.on_event("startup")
