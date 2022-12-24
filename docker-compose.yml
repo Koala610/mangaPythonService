@@ -27,4 +27,10 @@ services:
       - '8079:8080'
     links:
       - mysqldb
-    command: bash -c "alembic upgrade head && python ./src/main.py"
+    command: bash -c "
+            count=$(find ./migrations/versions/*.py | tee /dev/null | wc -l);
+            if [[ '$count' -eq 0 ]]; then 
+              alembic revision --autogenerate -m 'init';
+            else 
+              echo 'Migrations exists';
+            fi && alembic upgrade head && python ./src/main.py;"
