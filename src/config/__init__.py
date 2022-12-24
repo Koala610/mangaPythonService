@@ -25,3 +25,5 @@ DSN = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}?charset=u
 
 TEST_USERNAME = os.getenv("TEST_USERNAME")
 TEST_PASSWORD = os.getenv("TEST_PASSWORD")
+
+REQUEST_WAITING_TIME = int(os.getenv("REQUEST_WAITING_TIME"))

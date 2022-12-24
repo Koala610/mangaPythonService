@@ -33,7 +33,7 @@ class CRUDRepository:
         valid_keys = self.validate_arguments(**kwargs)
         valid_args = {key:kwargs[key] for key in valid_keys}
         with self.Session() as session:
-            session.query(self.Object).filter_by(id=id).update(valid_args)
+            session.query(self.Object).filter_by(user_id=id).update(valid_args)
             session.expire_all()
             session.commit()
 

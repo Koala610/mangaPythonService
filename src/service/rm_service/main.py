@@ -30,9 +30,15 @@ class MangaService:
                 f"Auth failed for user: {user_data.get('username')}")
         return response
 
-    async def get_bookmarks(self, user_id: int) -> list:
-        bookmarks = await self.client.get_bookmarks_data(user_id)
+    async def get_bookmarks(self, user_id: int, limit: int = 50, offset: int = 0) -> list:
+        bookmarks = await self.client.get_bookmarks_data(user_id, limit=limit, offset=offset)
+        if bookmarks is None:
+            return None
         bookmarks = [self.Manga.from_json(book) for book in bookmarks]
+        # for bookmark in bookmarks:
+            # response = await self.client.get(self.client.BASE_URL+"/"+bookmark.url, user_id)
+            # with open("test.html", "w", encoding="utf8") as f:
+                # f.write(response.get("text"))
         logger.debug(bookmarks)
         return bookmarks
 

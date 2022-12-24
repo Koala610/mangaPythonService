@@ -10,4 +10,4 @@ class User(Base):
     bookmarks_hash = Column(BigInteger)
     bookmarks_per_page = Column(Integer)
     technical_info = Column(LargeBinary)
-    is_subscribed = Column(Boolean)
+    is_subscribed = Column(Boolean, default=False)

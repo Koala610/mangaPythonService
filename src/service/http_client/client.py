@@ -3,10 +3,12 @@ import aiohttp
 import json
 import src.logger as logger
 import random
+import os
 
 from typing import List, Union, Dict, Optional, Tuple
 from fake_useragent import UserAgent
 from src.entity.protocol.manga_protocol import Manga
+from .exceptions import NotAuthorized
 
 
 class RMHTTPClient:
@@ -18,17 +20,37 @@ class RMHTTPClient:
     BOOKMARKS_PATH = "/private/bookmarks"
     CHANGE_PROXY_TIME = 300
     BOOKMARKS_GETTTING_PARAMS = {
-        "bookmarkSort":"NAME",
-        "elementFilter":[],
-        "statusFilter":["WATCHING"],
-        "includeUpdates":True,
-        "limit":50,
-        "offset":0
+        "bookmarkSort": "NAME",
+        "elementFilter": [],
+        "statusFilter": ["WATCHING"],
+        "includeUpdates": True,
+        "limit": 50,
+        "offset": 0
     }
+
     def __init__(self, proxies: List[str] = None):
         self.proxies: List[str] = proxies or []
         self.current_proxy: Optional[str] = None
+        self.cookie_path = "./src/etc"
         self.user_informations: Dict[int, dict] = {}
+        self.load_cookies()
+        self.user_informations
+
+    def load_cookies(self):
+        for file in os.listdir(self.cookie_path):
+            with open(self.cookie_path+"/"+file, "r") as f:
+                cookie_jar = aiohttp.CookieJar()
+                cookie_jar.load(f.name)
+                self.user_informations[int(file)] = {
+                    "cookie_jar": cookie_jar
+                }
+    def save_cookie(self, user_id: int):
+        path = self.cookie_path
+        if not os.path.exists(path):
+            os.mkdir(path)
+        with open(path+f"/{user_id}", "w") as f:
+            cookie_jar = self.user_informations[user_id].get("cookie_jar")
+            cookie_jar.save(f.name)
 
     async def auth(self, user_id: int, headers: dict, data: dict, params: dict) -> dict:
         self.set_auth_headers(headers)
@@ -44,6 +66,7 @@ class RMHTTPClient:
         self, url: str, user_id: int,
         headers: dict = None, params: dict = None, use_gwt: bool = False
     ) -> Union[dict, None]:
+        headers = headers or {}
         user_agent = UserAgent()
         headers["User-Agent"] = user_agent.firefox
         user_information = self.get_user_information(user_id)
@@ -66,6 +89,7 @@ class RMHTTPClient:
         self, url: str, user_id: int,
         headers: dict = None, data: dict = None
     ) -> Union[dict, None]:
+        headers = headers or {}
         user_information = self.get_user_information(user_id)
         user_agent = UserAgent()
         headers["User-Agent"] = user_agent.firefox
@@ -111,7 +135,7 @@ class RMHTTPClient:
     def save_user_information(self, user_id: int, user_information: dict) -> None:
         self.user_informations[user_id] = user_information
 
-    def create_user_information(self, user_id, cookie_jar = None) -> None:
+    def create_user_information(self, user_id, cookie_jar=None) -> None:
         cookie_jar = cookie_jar or None
         user_information = {"cookie_jar": cookie_jar}
         self.save_user_information(
@@ -142,13 +166,19 @@ class RMHTTPClient:
         headers["DNT"] = "1"
         headers["Content-Type"] = self.AUTH_CONTENT_TYPE
 
-    async def get_bookmarks_data(self, user_id: int) -> list:
+    async def get_bookmarks_data(self, user_id: int, limit: int = 50, offset: int = 0) -> list:
         headers = {}
         gwt = self.get_gwt(user_id)
+        if gwt is None:
+            raise NotAuthorized
         headers["Authorization"] = f"Bearer {gwt}"
         headers["Content-Type"] = "application/json"
         body = self.BOOKMARKS_GETTTING_PARAMS
+        body["limit"] = limit
+        body["offset"] = offset
         response = await self.post(self.AUTH_BASE_URL+"/api/bookmark/list", user_id, headers, json.dumps(body))
+        if response.get("status") == 401:
+            raise NotAuthorized
         result = json.loads(response.get("text"))
         result = result.get("list")
         return result
@@ -156,7 +186,9 @@ class RMHTTPClient:
     def get_gwt(self, user_id: int) -> str:
         user_information = self.get_user_information(user_id)
         cookie_jar = user_information.get("cookie_jar")
-        cookies = cookie_jar._cookies.get("grouple.co")
+        if cookie_jar is None:
+            return None
+        cookies = cookie_jar._cookies.get("grouple.co") or cookie_jar._cookies.get("readmanga.live")
         gwt: str = cookies.get("gwt").OutputString().split(";")[0]
         gwt = gwt.split("=")[1]
         return gwt

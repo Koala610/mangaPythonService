@@ -27,7 +27,7 @@ class RMManga:
     def __str__(self):
         result = "Название: " + self.title + "\n"
         result += "Текущая глава: " + str(self.current_chapter) + "\n"
-        result += "Кол-во непрочитанных глав: " + str(self.unread_chapters)
+        # result += "Кол-во непрочитанных глав: " + str(self.unread_chapters)
         return result
 
     def __hash__(self):
@@ -46,7 +46,7 @@ class RMManga:
        num = data.get("num") or -1
        resume = data.get("resume")
        chapter_url = resume.get("url") if resume is not None else ""
-       chapter = RMChapter(int(volume), int(num), url=chapter_url)
+       chapter = RMChapter(int(volume), int(num/10), url=chapter_url)
        manga_url = element.get("elementId").get("linkName")
        new_chapters = data.get("newChapters")
        result = cls(title=title, current_chapter=chapter, url=manga_url, unread_chapters=new_chapters)
