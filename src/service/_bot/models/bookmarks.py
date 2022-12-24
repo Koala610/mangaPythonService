@@ -2,6 +2,7 @@ import aiohttp
 import datetime
 
 from src.config import REQUEST_WAITING_TIME
+from src.entity import RMManga
 from src.repository import user_repository
 from src.service.rm_service import rm_service
 from src.service.http_client.exceptions import NotAuthorized
@@ -20,7 +21,8 @@ async def get_bookmarks(user_id: int, dp, limit: int = 0, offset: int = 0, retur
             return None
         if bookmarks is None:
             return None
-        user_repository.update(user_id, bookmarks_hash=hash(tuple(bookmarks)))
+        h = RMManga.hash_from_list(bookmarks)
+        user_repository.update(user_id, bookmarks_hash=h)
         await save_bookmarks_in_storage(user_id, bookmarks, dp)
         if return_dict:
             bookmarks = get_boomarks_dict(bookmarks)

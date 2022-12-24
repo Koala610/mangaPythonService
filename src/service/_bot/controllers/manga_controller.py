@@ -37,6 +37,7 @@ async def get_bookmarks(message: types.Message):
 )
 async def get_bookmarks(message: types.Message):
     user_id = message.from_user.id
+    logger.info("123")
     bookmarks = await bookmark_actions.get_bookmarks(user_id, dp, return_dict=True)
     markup = create_symbol_markup(bookmarks.keys())
     await telegram_bot.send_message(message.from_user.id, "Закладки:", reply_markup=markup)
@@ -51,7 +52,11 @@ async def add_username(message: types.Message, state: FSMContext):
         await telegram_bot.send_message(message.from_user.id, "Успешно...", reply_markup=main_menu)
     else:
         user_id = message.from_user.id
-        letter = message.text.split(" ")[1]
+        letter = message.text.split(" ")
+        if len(letter) != 2:
+            await telegram_bot.send_message(message.from_user.id, "Неверный вариант...")
+            return
+        letter = letter[1]
         bookmarks = await bookmark_actions.get_bookmarks(user_id, dp, return_dict=True)
         markup = create_symbol_markup(bookmarks.keys())
         bookmarks = bookmarks[letter]

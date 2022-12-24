@@ -1,3 +1,4 @@
+import hashlib
 from dataclasses import dataclass
 
 @dataclass
@@ -11,12 +12,10 @@ class RMChapter:
             return "Недоступно"
         return f"{self.volume} том, {self.chapter} глава"
 
-    def __hash__(self):
-       res = 17
-       res = 31 * res + self.volume
-       res = 31 * res + self.chapter
-       res = 31 * res + hash(self.url)
-       return res
+    def get_hash(self):
+        hash_object = hashlib.md5()
+        hash_object.update(str(self).encode())
+        return int(hash_object.hexdigest(), 16)
 
 @dataclass
 class RMManga:
@@ -31,13 +30,10 @@ class RMManga:
         # result += "Кол-во непрочитанных глав: " + str(self.unread_chapters)
         return result
 
-    def __hash__(self):
-        res = 17
-        res = 31 * res + hash(self.title)
-        res = 31 * res + hash(self.current_chapter)
-        res = 31 * res + hash(self.url)
-        res = 31 * res + self.unread_chapters
-        return res
+    def get_hash(self):
+        hash_object = hashlib.md5()
+        hash_object.update(str(self).encode())
+        return int(hash_object.hexdigest(), 16)
 
     @classmethod
     def from_json(cls, data: dict) -> object:
@@ -53,9 +49,17 @@ class RMManga:
        result = cls(title=title, current_chapter=chapter, url=manga_url, unread_chapters=new_chapters)
        return result
 
+    @classmethod
+    def hash_from_list(cls, l: list):
+        res = 17
+        for i in l:
+            res = 31 * res + i.get_hash()
+        return res
+
 
 def main():
-    pass
-
+    h = hashlib.sha256()
+    a = [RMManga("13", RMChapter(1, 1, "13"), "123", 123)]
+    print(RMManga.hash_from_list(a))
 if __name__ == "__main__":
-    print(dir(RMManga))
+    main()

@@ -29,6 +29,11 @@ class CRUDRepository:
             user = session.query(self.Object).get(id)
             return user
 
+    def find_by_subscription(self, is_subscribed) -> object:
+        with self.Session() as session:
+            users = session.query(self.Object).filter_by(is_subscribed=is_subscribed).all()
+            return users
+
     def update(self, id, **kwargs):
         valid_keys = self.validate_arguments(**kwargs)
         valid_args = {key:kwargs[key] for key in valid_keys}
@@ -45,7 +50,7 @@ class CRUDRepository:
 
     def count(self) -> int:
         with self.Session() as session:
-            cnt = session.query(func.count(self.Object.id)).scalar()
+            cnt = session.query(func.count(self.Object.user_id)).scalar()
             return cnt
 
     def validate_arguments(self, **kwargs):
