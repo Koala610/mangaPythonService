@@ -51,9 +51,9 @@ class RMManga:
 
     @classmethod
     def hash_from_list(cls, l: list):
-        res = 17
+        res = 0
         for i in l:
-            res = 31 * res + i.get_hash()
+            res += i.get_hash()
         return res
 
 

@@ -16,7 +16,7 @@ async def handle_start(message: types.Message):
 @dp.message_handler(
     lambda message: message.text and
     (message.text == '/subscribe' or message.text ==
-     '🔊 Подписаться на обноваления' or message.text == '🔇 Отписаться от обновлений')
+     '🔊 Подписаться на обновления' or message.text == '🔇 Отписаться от обновлений')
 )
 async def subscribe(message: types.Message):
     user_id = message.from_user.id 
