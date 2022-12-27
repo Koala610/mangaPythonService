@@ -1,4 +1,5 @@
 import src.logger as logger
+import hashlib
 
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
@@ -12,7 +13,13 @@ class CRUDRepository:
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=False)
         self.Object = Object
 
-    def create(self,**kwargs) -> int:
+    @classmethod
+    def get_password_hash(cls, password: str) -> int:
+        h = hashlib.md5()
+        h.update(password.encode())
+        return int(h.hexdigest(), 16)
+
+    def create(self,**kwargs) -> Optional[object]:
         valid_args = {key: value for key, value in kwargs.items() if key in self.validate_arguments(**kwargs)}
         with self.Session() as session:
             user = self.Object(**valid_args)
@@ -29,16 +36,11 @@ class CRUDRepository:
             user = session.query(self.Object).get(id)
             return user
 
-    def find_by_subscription(self, is_subscribed) -> object:
-        with self.Session() as session:
-            users = session.query(self.Object).filter_by(is_subscribed=is_subscribed).all()
-            return users
-
     def update(self, id, **kwargs):
         valid_keys = self.validate_arguments(**kwargs)
         valid_args = {key:kwargs[key] for key in valid_keys}
         with self.Session() as session:
-            session.query(self.Object).filter_by(user_id=id).update(valid_args)
+            session.query(self.Object).filter_by(id=id).update(valid_args)
             session.expire_all()
             session.commit()
 
@@ -50,7 +52,7 @@ class CRUDRepository:
 
     def count(self) -> int:
         with self.Session() as session:
-            cnt = session.query(func.count(self.Object.user_id)).scalar()
+            cnt = session.query(func.count(self.Object.id)).scalar()
             return cnt
 
     def validate_arguments(self, **kwargs):
