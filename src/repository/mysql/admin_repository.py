@@ -19,7 +19,6 @@ class AdminRepository(CRUDRepository):
     def find_by_username_and_password(self, username: str, password: str, is_password_hashed: bool = False) -> object:
         if not is_password_hashed:
             password = str(CRUDRepository.get_password_hash(password=password))
-        logger.info(password)
         with self.Session() as session:
             user = session.query(self.Object).filter_by(username=username, password=password).first()
         return user
