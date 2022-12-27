@@ -17,13 +17,14 @@ class User(Base):
 class Admin(Base):
     __tablename__ = 'admins'
 
+    id = Column(Integer, primary_key=True, unique=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     username = Column(String(255))
     password = Column(String(255))
     creation_timestamp = Column(DateTime)
+    actual_jwt = Column(String(255))
 
     __table_args__ = (
-        PrimaryKeyConstraint('creation_timestamp', 'username'),
         UniqueConstraint('username'),
     )
 
