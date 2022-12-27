@@ -1,12 +1,30 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, BigInteger, Boolean, LargeBinary
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, PrimaryKeyConstraint, UniqueConstraint, DateTime
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = "users"
-    user_id = Column(Integer, primary_key=True, unique=True)
+    id = Column(Integer, primary_key=True, unique=True)
     name = Column(String(255))
     bookmarks_hash = Column(String(255))
     bookmarks_per_page = Column(Integer, default=10)
     is_subscribed = Column(Boolean, default=False)
+
+
+class Admin(Base):
+    __tablename__ = 'admins'
+
+    user_id = Column(Integer, ForeignKey('users.id'))
+    username = Column(String(255))
+    password = Column(String(255))
+    creation_timestamp = Column(DateTime)
+
+    __table_args__ = (
+        PrimaryKeyConstraint('creation_timestamp', 'username'),
+        UniqueConstraint('username'),
+    )
+
+    user = relationship('User', foreign_keys=[user_id])

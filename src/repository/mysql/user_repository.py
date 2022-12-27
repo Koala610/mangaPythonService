@@ -12,6 +12,11 @@ class UserRepository(CRUDRepository):
         user = self.find_by_id(user_id)
         return True if user.is_subscribed else False
 
+    def find_by_subscription(self, is_subscribed) -> object:
+        with self.Session() as session:
+            users = session.query(self.Object).filter_by(is_subscribed=is_subscribed).all()
+            return users
+
 
 def main():
     pass
