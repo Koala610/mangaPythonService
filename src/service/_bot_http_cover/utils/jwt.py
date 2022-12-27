@@ -21,7 +21,10 @@ def generate_token(admin: Admin):
     return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
 def verify_jwt(token: str):
-        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        except jwt.exceptions.PyJWTError:
+            return None
         return payload
 
 def get_admin(username: str, password: str, is_password_hashed: bool = False) -> Admin:

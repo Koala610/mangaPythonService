@@ -19,6 +19,10 @@ class CRUDRepository:
         h.update(password.encode())
         return int(h.hexdigest(), 16)
 
+    def find_all(self):
+        with self.Session() as session:
+            objects = session.query(self.Object).all()
+            return objects
     def create(self,**kwargs) -> Optional[object]:
         valid_args = {key: value for key, value in kwargs.items() if key in self.validate_arguments(**kwargs)}
         with self.Session() as session:
