@@ -4,13 +4,15 @@ from fastapi import Body
 from fastapi import APIRouter
 from ..utils.jwt import generate_token, verify_jwt
 from ..services.admin_service import get_admin, update_jwt
+from ..models.credentials import Credentials
 from src.logger import logger
 
 router = APIRouter()
 
 @router.post("/login")
-def login(username: str, password: str):
-    user = get_admin(username, password)
+def login(credentials: Credentials):
+    user = get_admin(credentials.username, credentials.password)
+    logger.debug(f"Got user: {user}")
     if user is None:
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     token = generate_token(user)
