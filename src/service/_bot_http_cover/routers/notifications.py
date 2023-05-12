@@ -13,4 +13,4 @@ bearer_scheme = HTTPBearer()
 async def nofity_all(request: Request):
     users = get_users()
     for user in users:
-        await telegram_bot.send_message(user.id, request.message)
+        await telegram_bot.send_message(user.id, request.data.get("message"))
