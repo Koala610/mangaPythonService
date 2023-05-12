@@ -14,7 +14,7 @@ async def start_bot():
     logger.info("Bot started...")
     asyncio.create_task(bot.dp.start_polling())
 
-@bot_controller.app.on_event("startup")
+# @bot_controller.app.on_event("startup")
 def wrapper():
     async def send_updates():
         while True:

@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from typing import Optional
 
-class RefreshToken(BaseModel):
-    refresh_token: str
+class TokenRequest(BaseModel):
+    refresh_token: Optional[str]
+    access_token: Optional[str]
