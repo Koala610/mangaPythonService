@@ -1,9 +1,9 @@
 import asyncio
-import src.logger as logger
 
 from src.entity.protocol.parser_protocol import MangaParser
 from src.entity.protocol.client_protocol import HTTPClient
 from src.entity.protocol.manga_protocol import Manga
+from src.logger import logger
 
 
 class MangaService:
@@ -26,7 +26,7 @@ class MangaService:
             logger.info(
                 f"Auth completed for user: {user_data.get('username')}")
         else:
-            logger.logger.warning(
+            logger.warning(
                 f"Auth failed for user: {user_data.get('username')}")
         return response
 
