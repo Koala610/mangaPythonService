@@ -39,6 +39,8 @@ async def get_bookmarks(message: types.Message):
     user_id = message.from_user.id
     logger.info("123")
     bookmarks = await bookmark_actions.get_bookmarks(user_id, dp, return_dict=True)
+    if bookmarks is None:
+        await telegram_bot.send_message(user_id, "Ошибка при получении. Попробуйте снова ввести свои данные через /account")
     markup = create_symbol_markup(bookmarks.keys())
     await telegram_bot.send_message(message.from_user.id, "Закладки:", reply_markup=markup)
     await telegram_bot.send_message(message.from_user.id, "Введите /exit для выхода")

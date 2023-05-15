@@ -1,7 +1,6 @@
 import asyncio
 import aiohttp
 import json
-import src.logger as logger
 import random
 import os
 
@@ -9,6 +8,7 @@ from typing import List, Union, Dict, Optional, Tuple
 from fake_useragent import UserAgent
 from src.entity.protocol.manga_protocol import Manga
 from .exceptions import NotAuthorized
+from src.logger import logger
 
 
 class RMHTTPClient:
@@ -29,9 +29,14 @@ class RMHTTPClient:
     }
 
     def __init__(self, proxies: List[str] = None):
+        self.cookie_path = "./src/etc"
+        if not os.path.exists(self.cookie_path):
+            os.makedirs(self.cookie_path)
+            logger.info(f"Created folder at {self.cookie_path}")
+        else:
+            logger.info(f"Folder already exists at {self.cookie_path}")
         self.proxies: List[str] = proxies or []
         self.current_proxy: Optional[str] = None
-        self.cookie_path = "./src/etc"
         self.user_informations: Dict[int, dict] = {}
         self.load_cookies()
         self.user_informations
@@ -116,7 +121,7 @@ class RMHTTPClient:
         self.verify_user_session(user_id)
         user_information = self.user_informations.get(user_id)
         if user_information is None:
-            logger.logger.warning(
+            logger.warning(
                 f"Information for user_id: {user_id} not found")
             return None
         return user_information
