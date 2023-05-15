@@ -9,6 +9,6 @@ router = APIRouter()
 
 @router.get("/{user_id}/bookmarks/hash")
 @check_if_user_admin
-async def get_bookmarks_hash(user_id: int, authorization: Annotated[str | None, Header()] = Header(title="Authorization")):
+async def get_bookmarks_hash(user_id: int, authorization: Annotated[str or None, Header()] = Header(title="Authorization")):
     bookmarks: list = await rm_service.get_bookmarks(user_id=user_id)
     return RMManga.hash_from_list(bookmarks)

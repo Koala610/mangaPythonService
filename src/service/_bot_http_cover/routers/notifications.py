@@ -11,13 +11,13 @@ bearer_scheme = HTTPBearer()
 
 @router.post("/notify/all/")
 @check_if_user_admin
-async def nofity_all(request: Request, authorization: Annotated[str | None, Header()] = Header(title="Authorization")):
+async def nofity_all(request: Request, authorization: Annotated[str or None, Header()] = Header(title="Authorization")):
     users = get_users()
     for user in users:
         await telegram_bot.send_message(user.id, request.data.get("message"))
 
 @router.post("/notify/{user_id}")
 @check_if_user_admin
-async def nofity_user(request: Request, user_id: int, authorization: Annotated[str | None, Header()] = Header(title="Authorization")):
+async def nofity_user(request: Request, user_id: int, authorization: Annotated[str or None, Header()] = Header(title="Authorization")):
     user = get_user_by_id(user_id)
     await telegram_bot.send_message(user.id, request.data.get("message"))
