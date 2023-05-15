@@ -35,10 +35,6 @@ class MangaService:
         if bookmarks is None:
             return None
         bookmarks = [self.Manga.from_json(book) for book in bookmarks]
-        # for bookmark in bookmarks:
-            # response = await self.client.get(self.client.BASE_URL+"/"+bookmark.url, user_id)
-            # with open("test.html", "w", encoding="utf8") as f:
-                # f.write(response.get("text"))
         logger.debug(bookmarks)
         return bookmarks
 
