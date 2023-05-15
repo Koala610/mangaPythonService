@@ -25,10 +25,27 @@ class Admin(Base):
     password = Column(String(255))
     creation_timestamp = Column(DateTime)
     actual_jwt = Column(String(255))
-    refresh_token = Column(String(255))
+    refresh_token = Column(DateTime, default=datetime.now())
 
     __table_args__ = (
         UniqueConstraint('username'),
     )
 
     user = relationship('User', foreign_keys=[user_id])
+
+class Support(Base):
+    __tablename__ = "supports"
+    id = Column(Integer, primary_key=True, unique=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user: User = relationship('User', foreign_keys=[user_id])
+    messages = relationship('Support', back_populates="support")
+
+class Message(Base):
+    __tablename__ = "messages"
+    id = Column(Integer, primary_key=True, unique=True)
+    support_id = Column(Integer, ForeignKey('supports.id'))
+    support: Support = relationship('Support', back_populates="messages")
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user: User = relationship('User', foreign_keys=[user_id])
+    message = Column(String(255))
+    last_updated = Column(DateTime, default=datetime.now())
