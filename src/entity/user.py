@@ -36,7 +36,7 @@ class Admin(Base):
 class Support(Base):
     __tablename__ = "supports"
     id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(Integer, ForeignKey('users.id'), unique=True)
     user: User = relationship('User', foreign_keys=[user_id])
     messages = relationship('Message', back_populates="support")
 
