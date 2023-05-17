@@ -10,7 +10,7 @@ from src import logger
 
 from ..views.bookmarks import create_bookmark_response, create_unread_response
 from ..utils.states import BookmarkShowingStates
-from ..views.menu_markups import create_symbol_markup, main_menu
+from ..views.menu_markups import create_symbol_markup, get_menu_markup
 
 
 @dp.message_handler(
@@ -49,11 +49,11 @@ async def get_bookmarks(message: types.Message):
 
 @dp.message_handler(state=BookmarkShowingStates.in_process)
 async def add_username(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
     if message.text.replace(' ', '') == '/exit':
         await state.finish()
-        await telegram_bot.send_message(message.from_user.id, "Успешно...", reply_markup=main_menu)
+        await telegram_bot.send_message(message.from_user.id, "Успешно...", reply_markup=get_menu_markup(user_id))
     else:
-        user_id = message.from_user.id
         letter = message.text.split(" ")
         if len(letter) != 2:
             await telegram_bot.send_message(message.from_user.id, "Неверный вариант...")

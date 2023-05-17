@@ -1,9 +1,9 @@
 from aiogram.dispatcher import FSMContext
 from aiogram import types
-from src import logger
+from src.logger import logger
 from src.service._bot.bot import telegram_bot, dp
-from ..models.user import auth, check_if_subscribed
-from ..views.menu_markups import main_menu, cng_acc_menu, create_reply_keyboard_markup, cng_acc_btn, menu_btn, subscribe_btn, unsubscribe_btn
+from ..models.user import auth
+from ..views.menu_markups import get_menu_markup
 from ..views.users import get_config_menu_markup
 from ..utils.states import AccStates
 
@@ -11,7 +11,7 @@ from ..utils.states import AccStates
 @dp.message_handler(lambda message: message.text and
                     (message.text == '/menu' or message.text == "📋 Меню"))
 async def show_menu(message: types.Message):
-    await telegram_bot.send_message(message.from_user.id, "Меню:", reply_markup=main_menu)
+    await telegram_bot.send_message(message.from_user.id, "Меню:", reply_markup=get_menu_markup(message.from_user.id))
 
 @dp.message_handler(lambda message: message.text and
                     (message.text == '/settings' or message.text == "⚙️ Настройки"))
@@ -53,8 +53,11 @@ async def add_password(message: types.Message, state: FSMContext):
             "username": username,
             "password": password
         }
-        await auth(user_id, data)
-        await telegram_bot.send_message(user_id, 'Успешно!', reply_markup=main_menu)
-        logger.info(f"User {user_id} successfully authorized")
+        if await auth(user_id, data):
+            await telegram_bot.send_message(user_id, 'Успешно!', reply_markup=get_menu_markup(user_id))
+            logger.info(f"User {user_id} successfully authorized")
+        else:
+            await telegram_bot.send_message(user_id, 'Ошибка! Неверные данные', reply_markup=get_menu_markup(user_id))
+            logger.error(f"User {user_id} didn't authorized")
 
     await state.finish()

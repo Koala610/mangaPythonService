@@ -16,10 +16,13 @@ class MangaService:
         logger.info("Manga service initalized...")
 
     async def auth(self, user_id: int, user_data: dict) -> dict:
+        self.client.delete_cookie(user_id=user_id)
         headers = {}
 
         auth_page_html = await self.client.get_auth_page_html(user_id, headers)
         params = self.parser.parse_auth_page(auth_page_html)
+        if params is None:
+            return None
 
         response = await self.client.auth(user_id, headers, user_data, params) 
         if "Вход произведен" in response.get("text"):
@@ -28,6 +31,7 @@ class MangaService:
         else:
             logger.warning(
                 f"Auth failed for user: {user_data.get('username')}")
+            return None
         return response
 
     async def get_bookmarks(self, user_id: int, limit: int = 0, offset: int = 0) -> list:

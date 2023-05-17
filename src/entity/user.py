@@ -14,6 +14,8 @@ class User(Base):
     bookmarks_per_page = Column(Integer, default=10)
     is_subscribed = Column(Boolean, default=False)
     last_updated = Column(DateTime, default=datetime.now())
+    support = relationship('Support', back_populates="user")
+    admin = relationship('Admin', back_populates='user')
 
 
 class Admin(Base):
@@ -31,13 +33,13 @@ class Admin(Base):
         UniqueConstraint('username'),
     )
 
-    user = relationship('User', foreign_keys=[user_id])
+    user = relationship('User', back_populates='admin')
 
 class Support(Base):
     __tablename__ = "supports"
     id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     user_id = Column(Integer, ForeignKey('users.id'), unique=True)
-    user: User = relationship('User', foreign_keys=[user_id])
+    user: User = relationship('User', back_populates="support")
     messages = relationship('Message', back_populates="support")
 
 class Message(Base):

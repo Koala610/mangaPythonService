@@ -57,6 +57,14 @@ class RMHTTPClient:
             cookie_jar = self.user_informations[user_id].get("cookie_jar")
             cookie_jar.save(f.name)
 
+    def delete_cookie(self, user_id: int):
+        path = self.cookie_path+f"/{user_id}"
+        if os.path.exists(path):
+            os.remove(path)
+        if self.user_informations.get(user_id) is not None:
+            del self.user_informations[user_id]
+
+
     async def auth(self, user_id: int, headers: dict, data: dict, params: dict) -> dict:
         self.set_auth_headers(headers)
         data = self.get_auth_request_body(
