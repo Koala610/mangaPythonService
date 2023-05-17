@@ -35,7 +35,7 @@ class Admin(Base):
 
 class Support(Base):
     __tablename__ = "supports"
-    id = Column(Integer, primary_key=True, unique=True)
+    id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     user: User = relationship('User', foreign_keys=[user_id])
     messages = relationship('Message', back_populates="support")
@@ -50,3 +50,4 @@ class Message(Base):
     message = Column(String(255))
     last_updated = Column(DateTime, default=datetime.now())
     is_processed = Column(Boolean, default=False)
+    response = Column(String(255))
