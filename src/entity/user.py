@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, PrimaryKeyConstraint, UniqueConstraint, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, PrimaryKeyConstraint, UniqueConstraint, DateTime, Sequence
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
@@ -42,10 +42,12 @@ class Support(Base):
 
 class Message(Base):
     __tablename__ = "messages"
-    id = Column(Integer, primary_key=True, unique=True)
+    id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     support_id = Column(Integer, ForeignKey('supports.id'))
     support: Support = relationship('Support', back_populates="messages")
     user_id = Column(Integer, ForeignKey('users.id'))
     user: User = relationship('User', foreign_keys=[user_id])
     message = Column(String(255))
     last_updated = Column(DateTime, default=datetime.now())
+    is_processed = Column(Boolean, default=False)
+    response = Column(String(255))
