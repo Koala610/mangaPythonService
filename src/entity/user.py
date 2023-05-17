@@ -50,4 +50,3 @@ class Message(Base):
     message = Column(String(255))
     last_updated = Column(DateTime, default=datetime.now())
     is_processed = Column(Boolean, default=False)
-    response = Column(String(255))
