@@ -6,9 +6,15 @@ cng_acc_btn = KeyboardButton("📝 Изменить аккаунт")
 unreads_btn = KeyboardButton("📒 Вывести недочитанные")
 bookmarks_btn = KeyboardButton("🔖 Вывести закладки")
 settings_btn = KeyboardButton("⚙️ Настройки")
+
 support_message_btn = KeyboardButton("📞 Отправить сообщение в поддержку")
 support_menu_btn = KeyboardButton("⌨️ Меню поддержки")
+
+all_support_message_btn = KeyboardButton("✉️ Все сообщения")
+user_support_message_btn = KeyboardButton("📩 В обработке")
+
 menu_btn = KeyboardButton("📋 Меню")
+
 subscribe_btn = '🔊 Подписаться на обновления'
 unsubscribe_btn = '🔇 Отписаться от обновлений'
 
@@ -44,6 +50,12 @@ settings_menu = ReplyKeyboardMarkup(
     one_time_keyboard=True,
     row_width=1
 ).add(cng_acc_btn, menu_btn)
+
+support_menu = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    one_time_keyboard=True,
+    row_width=1
+).add(all_support_message_btn, user_support_message_btn, menu_btn)
 
 def create_symbol_markup(keys):
     markup = create_reply_keyboard_markup(row_width=len(keys)//5)
