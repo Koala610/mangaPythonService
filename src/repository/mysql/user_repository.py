@@ -22,6 +22,13 @@ class UserRepository(CRUDRepository):
         with self.Session() as session:
             users = session.query(self.Object).filter_by(is_subscribed=is_subscribed).all()
             return users
+    
+    def find_user_support_id(self, user_id):
+        with self.Session() as session:
+            user = session.query(self.Object).get(user_id)
+            if len(user.support) == 0:
+                return None
+            return user.support[0].id
 
 
 def main():

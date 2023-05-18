@@ -6,7 +6,7 @@ from src.entity import RMManga
 from src.repository import user_repository
 from src.service.rm_service import rm_service
 from src.service.http_client.exceptions import NotAuthorized
-from src import logger
+from src.logger import logger
 from typing import Optional
 
 
@@ -32,11 +32,10 @@ async def get_bookmarks(user_id: int, dp, limit: int = 0, offset: int = 0, retur
     return bookmarks
 
 async def save_bookmarks_in_storage(user_id, bookmarks, dp):
-        storage_data = {
-            "timestamp": datetime.datetime.now(),
-            "bookmarks": bookmarks,
-        }
-        await dp.storage.set_data(user=user_id, data=storage_data)
+    storage_data = await dp.storage.get_data(user=user_id)
+    storage_data["timestamp"] = datetime.datetime.now()
+    storage_data["bookmarks"] = bookmarks
+    await dp.storage.set_data(user=user_id, data=storage_data)
 
 def get_boomarks_dict(bookmarks):
     bookmarks_dict = {}

@@ -9,3 +9,6 @@ class BookmarkShowingStates(StatesGroup):
 
 class SendMessageStates(StatesGroup):
     in_process = State()
+
+class AnswerMessageStates(StatesGroup):
+    in_process = State()

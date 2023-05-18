@@ -11,7 +11,7 @@ support_message_btn = KeyboardButton("📞 Отправить сообщение
 support_menu_btn = KeyboardButton("⌨️ Меню поддержки")
 
 all_support_message_btn = KeyboardButton("✉️ Все сообщения")
-user_support_message_btn = KeyboardButton("📩 В обработке")
+user_support_message_btn = KeyboardButton("📩 Обработанные")
 
 menu_btn = KeyboardButton("📋 Меню")
 
