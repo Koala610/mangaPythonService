@@ -23,6 +23,7 @@ class CRUDRepository:
         with self.Session() as session:
             objects = session.query(self.Object).all()
             return objects
+
     def create(self,**kwargs) -> Optional[object]:
         valid_args = {key: value for key, value in kwargs.items() if key in self.validate_arguments(**kwargs)}
         with self.Session() as session:
@@ -65,3 +66,7 @@ class CRUDRepository:
         if invalid_keys:
             raise ValueError(f'Invalid keys: {invalid_keys}')
         return valid_keys
+    
+    def find_in_range(self, offset, limit):
+        with self.Session() as session:
+            return session.query(self.Object).offset(offset).limit(limit).all()

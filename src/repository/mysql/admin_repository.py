@@ -1,10 +1,8 @@
 import src.logger as logger
-import hashlib
 
 from .crud_repository import CRUDRepository
 from typing import Type, Optional
 from ...entity.protocol.entity_protocol import DatabaseEntity
-from sqlalchemy.orm import Session
 
 class AdminRepository(CRUDRepository):
     def __init__(self, Object: Type[DatabaseEntity], dsn: str):

@@ -1,10 +1,10 @@
 import bs4
-import src.logger as logger
 
 from typing import Dict
 from dataclasses import dataclass
 from src.entity.protocol.manga_protocol import Manga
 from src.entity.manga import RMManga
+from src.logger import logger
 
 class ReadmangaParser:
     def parse_manga_page(self, html: str) -> dict:
@@ -26,7 +26,10 @@ class ReadmangaParser:
         soup = bs4.BeautifulSoup(html, features="html.parser")
         form = soup.find("form")
         url = form.attrs["action"]
-        targer_uri = form.find("input", {"name": "targetUri"})["value"]
+        pre_targer_uri = form.find("input", {"name": "targetUri"})
+        if (pre_targer_uri is None):
+            return None
+        targer_uri = pre_targer_uri["value"]
         logger.info("Auth page successfully parsed...")
         return {
             "url": url,
