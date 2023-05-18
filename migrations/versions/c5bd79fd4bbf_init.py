@@ -35,7 +35,7 @@ def upgrade() -> None:
     sa.Column('password', sa.String(length=255), nullable=True),
     sa.Column('creation_timestamp', sa.DateTime(), nullable=True),
     sa.Column('actual_jwt', sa.String(length=255), nullable=True),
-    sa.Column('refresh_token', sa.DateTime(), nullable=True),
+    sa.Column('refresh_token', sa.String(length=255), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id'),

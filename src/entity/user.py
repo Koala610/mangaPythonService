@@ -27,7 +27,7 @@ class Admin(Base):
     password = Column(String(255))
     creation_timestamp = Column(DateTime)
     actual_jwt = Column(String(255))
-    refresh_token = Column(DateTime, default=datetime.now())
+    refresh_token = Column(String(255))
 
     __table_args__ = (
         UniqueConstraint('username'),
