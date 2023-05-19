@@ -7,6 +7,12 @@ from functools import wraps
 def get_admin(username: str, password: str, is_password_hashed: bool = False) -> Admin:
     return admin_repository.find_by_username_and_password(username, password, is_password_hashed=is_password_hashed)
 
+def get_admin_by_jwt(jwt: str):
+    return admin_repository.find_by_actial_jwt(jwt)
+
+def update_user_id(id: int, user_id: int):
+    return admin_repository.update(id, user_id=user_id)
+
 def update_jwt(id: int, jwt: str, refresh_token: str) -> None:
     admin_repository.update(id, actual_jwt=jwt, refresh_token=refresh_token)
 
