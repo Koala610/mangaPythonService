@@ -1,3 +1,5 @@
 from pydantic import BaseModel
 
-# class 
+class AdminInfo(BaseModel):
+    id: int
+    user_id: str
