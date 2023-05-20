@@ -20,3 +20,10 @@ class AdminRepository(CRUDRepository):
         with self.Session() as session:
             user = session.query(self.Object).filter_by(username=username, password=password).first()
         return user
+
+    def find_by_actial_jwt(self, jwt: str):
+        with self.Session() as session:
+            admin = session.query(self.Object).filter_by(actual_jwt=jwt).first()
+            if admin is None:
+                raise Exception("No such admin")
+            return admin

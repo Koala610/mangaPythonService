@@ -3,6 +3,7 @@ import hashlib
 
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import IntegrityError, DataError
 from typing import Type, Optional
 from ...entity.protocol.entity_protocol import DatabaseEntity
 
@@ -45,9 +46,12 @@ class CRUDRepository:
         valid_keys = self.validate_arguments(**kwargs)
         valid_args = {key:kwargs[key] for key in valid_keys}
         with self.Session() as session:
-            session.query(self.Object).filter_by(id=id).update(valid_args)
-            session.expire_all()
-            session.commit()
+            try:
+                session.query(self.Object).filter_by(id=id).update(valid_args)
+                session.expire_all()
+                session.commit()
+            except IntegrityError or DataError as e:
+                raise Exception(f"Can not update entity with id {id}")
 
     def delete_by_id(self, id):
         with self.Session() as session:

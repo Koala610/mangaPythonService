@@ -4,6 +4,7 @@ from src.service._bot_http_cover.routers import base
 from .routers import jwt
 from .routers import notifications
 from .routers import bookmarks
+from .routers import user
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
@@ -17,6 +18,7 @@ app.include_router(router=base.router)
 app.include_router(router=jwt.router)
 app.include_router(router=notifications.router)
 app.include_router(router=bookmarks.router)
+app.include_router(router=user.router)
 
 app.add_middleware(
     CORSMiddleware,
