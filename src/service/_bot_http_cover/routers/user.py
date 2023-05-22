@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Header
 from typing import Annotated, Optional
 from ..services.admin_service import check_if_user_admin, get_admin_by_jwt, update_user_id
-from ..services. user_service import get_users_in_range
-from ..models.credentials import Credentials
-from ..models.request import Request
+from ..services. user_service import get_users_in_range, check_whether_user_is_support, get_user_by_id
 from ..models.admin import AdminInfo
 from src.entity.user import Admin
 from src.logger import logger
@@ -27,6 +25,16 @@ async def get_all_users(offset: Optional[int], limit: Optional[int], authorizati
     if offset is not None and limit is not None:
         return get_users_in_range(offset=offset, limit=limit)
     return get_all_users()
+
+@router.get("/user/{user_id}")
+@check_if_user_admin
+async def get_user_by_its_id(user_id: int, authorization: Annotated[str or None, Header()] = Header(title="Authorization")):
+    return get_user_by_id(user_id)
+
+@router.get("/user/{user_id}/is_support")
+@check_if_user_admin
+async def check_if_user_is_support(user_id: str, authorization: Annotated[str or None, Header()] = Header(title="Authorization")):
+    return check_whether_user_is_support(user_id)
 
 @router.get("/admin")
 @check_if_user_admin
