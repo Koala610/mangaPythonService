@@ -60,6 +60,5 @@ class RMManga:
 def main():
     h = hashlib.sha256()
     a = [RMManga("13", RMChapter(1, 1, "13"), "123", 123)]
-    print(RMManga.hash_from_list(a))
 if __name__ == "__main__":
     main()
