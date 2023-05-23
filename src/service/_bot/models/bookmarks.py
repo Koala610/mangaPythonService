@@ -2,11 +2,11 @@ import aiohttp
 import datetime
 
 from src.config import REQUEST_WAITING_TIME
-from src.entity import RMManga
+from src.core_entity.manga import RMManga
 from src.repository import user_repository
 from src.service.rm_service import rm_service
 from src.service.http_client.exceptions import NotAuthorized
-from src.logger import logger
+from src.core_logger import logger
 from typing import Optional
 
 

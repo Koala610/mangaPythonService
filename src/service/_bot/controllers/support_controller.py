@@ -3,7 +3,7 @@ import asyncio
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiohttp.client_exceptions import ClientConnectionError
-from src.logger import logger
+from src.core_logger import logger
 from src.service._bot.bot import telegram_bot, dp
 from src.service.support_service import support_service
 from src.repository import user_repository

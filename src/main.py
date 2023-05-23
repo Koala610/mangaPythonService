@@ -2,7 +2,6 @@ import asyncio
 import uvicorn
 import config
 import logger
-
 from service import app
 
 if __name__ == "__main__":

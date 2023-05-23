@@ -1,7 +1,7 @@
-from src.entity.protocol.manga_protocol import Manga
+from src.core_entity.protocol.manga_protocol import Manga
 from typing import Tuple
 from aiogram.types.inline_keyboard import InlineKeyboardMarkup, InlineKeyboardButton
-from src.logger import logger
+from src.core_logger import logger
 
 def create_bookmark_response(bookmark: Manga) -> Tuple[str, InlineKeyboardMarkup]:
     text = str(bookmark)

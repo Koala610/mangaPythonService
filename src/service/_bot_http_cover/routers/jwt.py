@@ -4,7 +4,7 @@ from ..utils.jwt import generate_token, verify_jwt, generate_refresh_token
 from ..services.admin_service import get_admin, update_jwt
 from ..models.credentials import Credentials
 from ..models.refresh_token import TokenRequest
-from src.logger import logger
+from src.core_logger import logger
 
 router = APIRouter()
 

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Header
-from src.entity.manga import RMManga
+from src.core_entity.manga import RMManga
 from src.service._bot_http_cover.services.admin_service import check_if_user_admin
 from src.service.rm_service import rm_service
 from typing import Annotated

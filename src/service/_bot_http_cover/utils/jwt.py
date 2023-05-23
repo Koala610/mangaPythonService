@@ -1,7 +1,7 @@
 import jwt
 
 from datetime import datetime, timedelta
-from src.entity.user import Admin
+from src.core_entity.user import Admin
 from src.config import SECRET_KEY
 
 def generate_token(admin: Admin):

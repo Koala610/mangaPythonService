@@ -1,6 +1,6 @@
 from aiogram.dispatcher import FSMContext
 from aiogram import types
-from src.logger import logger
+from src.core_logger import logger
 from src.service._bot.bot import telegram_bot, dp
 from ..models.user import auth
 from ..views.menu_markups import get_menu_markup

@@ -1,6 +1,6 @@
 from src.repository import user_repository
 from src.service.rm_service import rm_service
-from src.logger import logger
+from src.core_logger import logger
 
 
 def create_user(user_id: int, name: str) -> None:

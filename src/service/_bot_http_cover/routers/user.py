@@ -3,8 +3,8 @@ from typing import Annotated, Optional
 from ..services.admin_service import check_if_user_admin, get_admin_by_jwt, update_user_id
 from ..services. user_service import get_users_in_range, check_whether_user_is_support, get_user_by_id
 from ..models.admin import AdminInfo
-from src.entity.user import Admin
-from src.logger import logger
+from src.core_entity.user import Admin
+from src.core_logger import logger
 
 router = APIRouter()
 

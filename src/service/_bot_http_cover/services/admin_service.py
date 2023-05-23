@@ -1,5 +1,5 @@
-from src.repository.mysql import admin_repository
-from src.entity.user import Admin
+from src.repository import admin_repository
+from src.core_entity.user import Admin
 from src.service._bot_http_cover.utils.jwt import verify_jwt
 from fastapi import HTTPException
 from functools import wraps

@@ -6,7 +6,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from src.service._bot.bot import telegram_bot, dp
-from src.logger import logger
+from src.core_logger import logger
 
 from ..views.bookmarks import create_bookmark_response, create_unread_response
 from ..utils.states import BookmarkShowingStates
