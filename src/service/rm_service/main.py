@@ -1,9 +1,9 @@
 import asyncio
 
-from src.entity.protocol.parser_protocol import MangaParser
-from src.entity.protocol.client_protocol import HTTPClient
-from src.entity.protocol.manga_protocol import Manga
-from src.logger import logger
+from src.core_entity.protocol.parser_protocol import MangaParser
+from src.core_entity.protocol.client_protocol import HTTPClient
+from src.core_entity.protocol.manga_protocol import Manga
+from src.core_logger import logger
 
 
 class MangaService:

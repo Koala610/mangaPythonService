@@ -6,9 +6,9 @@ import os
 
 from typing import List, Union, Dict, Optional, Tuple
 from fake_useragent import UserAgent
-from src.entity.protocol.manga_protocol import Manga
+from src.core_entity.protocol.manga_protocol import Manga
 from .exceptions import NotAuthorized
-from src.logger import logger
+from src.core_logger import logger
 
 
 class RMHTTPClient:
