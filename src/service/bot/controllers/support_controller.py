@@ -121,17 +121,6 @@ async def add_password(message: types.Message, state: FSMContext):
         del storage_data["message_id"]
         await dp.storage.set_data(user=user_id, data=storage_data)
 
-        await answer_message(message_id, user_id, response)
+        await answer_message(message_id, response, support_id)
         await telegram_bot.send_message(user_id, "Отправлено")
-#         message_to_response = await support_service.get_message(message_id)
-#         support_id = user_repository.find_user_support_id(user_id)
-#         await support_service.set_message_response(message_id=message_id, response=response, support_id=support_id)
-#         final_message = f"""
-#             Вам ответили
-# Сообщение: {message_to_response.get("message")}
-# ID члена поддержки: {support_id}
-# Ответ: {response}
-#         """
-#         await telegram_bot.send_message(user_id, "Отправлено")
-#         await telegram_bot.send_message(message_to_response.get("user_id"), final_message)
     await state.finish()
